@@ -10,7 +10,9 @@ public:
 
   ~Complex() {};
   
-  static Complex<T> Conjugated(const Complex<T> &c);
+  Complex<T> Conjugated() const {
+    return Complex<T>{a, -b};
+  }
 
   friend constexpr Complex<T> operator+(const Complex<T> &lhs,
                                         const Complex<T> &rhs) {
@@ -32,11 +34,12 @@ public:
 
   friend constexpr Complex<T> operator/(const Complex<T> &lhs,
                                         const Complex<T> &rhs) {
-	Complex<T> conj = rhs*Conjugated(rhs);
+	Complex<T> intermediate = rhs*rhs.Conjugated();
+    T conj = (intermediate.a*intermediate.a+intermediate.b*intermediate.b);
     return Complex<T> {
       (
-	   ((lhs.a * rhs.a) + (lhs.b * rhs.b)) / rhs*Complex<T>().Conjugated(rhs)),
-	  (((lhs.b * rhs.a) - (lhs.a * rhs.b)) / rhs*Complex<T>().Conjugated(rhs))
+	   ((lhs.a * rhs.a) + (lhs.b * rhs.b)) / conj),
+	  (((lhs.b * rhs.a) - (lhs.a * rhs.b)) / conj)
 	};
   }
 
